@@ -1,0 +1,31 @@
+//The recurrence relation clearly indicates that this is only dependent on the previous value -> we can use sliding array to maximize it
+//The key is the boundary condition -> we only care about the i-1 scenario -> so dp[j]=dp[j-z], s.t. j-z>=i-1;
+
+class Solution {
+public:
+    //from large to small
+    //dp[j]=dp[i-1][j-1]+dp[i-1][j-2]+...+dp[i-1][j-5];
+    vector<int> numberOfDice(int n) {
+        int size=n;
+        const int N=70;
+        int dp[N]={};
+        for(int i=1;i<=6;i++) dp[i]=1;
+        
+        for(int i=2;i<=size;i++)
+        {
+            for(int j=6*i;j>=i;j--)
+            {
+                int max=min(6,j);
+                dp[j]=0;
+                for(int z=1;z<=max;z++)
+                {
+                    if(j-z>=i-1) dp[j]+=dp[j-z];
+                }
+            }
+        }
+        vector<int> ans;
+        for(int i=size;i<=6*size;i++) ans.push_back(dp[i]);
+        return ans;
+        
+    }
+};
