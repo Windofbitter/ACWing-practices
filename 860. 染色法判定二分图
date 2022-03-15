@@ -1,0 +1,63 @@
+//Using 1,2 to represent the colour 
+//using static linked list 
+
+
+#include<cstring>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+const int N=100100; 
+const int M=200100;
+int h[N]; int e[M]; int ne[M]; int idx;
+int colour[N]; //this would store the colour of the edge
+
+
+void add(int a, int b)
+{
+    e[idx]=b;
+    ne[idx]=h[a];
+    h[a]=idx++;
+}
+
+bool dfs(int a, int c) // we use 1 to represent 1 colour, and 2 to represent another colour
+{
+    colour[a]=c;
+    for(int i=h[a]; i!=-1;i=ne[i])
+    {
+        int j=e[i];
+        if(!colour[j])
+        {
+            if(dfs(j,3-c)==false) return false;
+        }
+        if (colour[j]==c) return false;
+    }
+    return true;
+}
+int main()
+{
+    memset(h,-1,sizeof h);
+    int n,m;
+    scanf("%d %d",&n,&m);
+    while(m--)
+    {
+        int a,b;
+        scanf("%d %d",&a,&b);
+        add(a,b);
+        add(b,a);
+    }
+    bool flag=true;
+    for(int i=1;i<=n;i++)
+    {
+        if(!colour[i])
+        {
+            if(!dfs(i,1))
+            {
+                flag=false;
+                break;
+            }
+        }
+    }
+    if(flag==true) puts("Yes");
+    else puts("No");
+    return 0;
+}
